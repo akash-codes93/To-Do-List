@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>To do list</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h1 class="h1">To Do List</h1>
+
+
+    <div class="list-type1">
+        <ol id = "list">
+            <!--    Test li -->
+            <!--<li><a>Create task 1 <button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#confirm-delete">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                 </button></a>
+                <div class="desc">This is the demo description of task created.</div>
+            </li>-->
+
+
+        </ol>
+        <ol>
+            <li class="text-center">
+                <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#confirm-task">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Add a task
+                </button>
+            </li>
+        </ol>
+    </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>You are about to delete this Task, this procedure is irreversible.</p>
+                    <p>Do you want to proceed?</p>
+                    <p class="debug-url"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="dismiss_delete_modal">Cancel</button>
+                    <a class="btn btn-danger btn-ok btn-sm" id="delete_task">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-task" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModaltask">Add a Task</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                          <label class="control-label col-sm-4" for="task_name">Task Name:</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control" id="task_name" placeholder="Enter Task Name" name="task_name" required>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-sm-4" for="task_desc">Task Description:</label>
+                          <div class="col-sm-8">
+                              <textarea rows="4" cols="50" class="form-control" id="task_desc" placeholder="Enter Task Description" name="task_desc" required></textarea>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="dismiss_modal">Cancel</button>
+                    <a class="btn btn-primary btn-ok btn-sm" id="add_task">Submit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        /* pulling api to list the task */
+
+        $.ajax({
+            type: "GET",
+            async:false,
+            url: "http://localhost:8001/task/list",
+            dataType: 'json',
+            success: function (data) {
+                /* loopping over the number of tasks */
+                for(i=0;i<data["task"].length;i++){
+
+                    /* creating different html element with jQuery */
+
+                    list = document.getElementById("list");
+                    new_li = document.createElement("li");
+                    anchor = document.createElement("a");
+                    button = document.createElement("button");
+
+                    /* setting properties of html tags */
+
+                    button.className = "btn btn-default btn-sm pull-right";
+                    var data_toggle = document.createAttribute("data-toggle");
+                    data_toggle.value = "modal";
+                    var data_target = document.createAttribute("data-target");
+                    data_target.value = "#confirm-delete";
+                    var data_href = document.createAttribute("data-href");
+                    data_href.value = "http://localhost:8001/task/delete/"+ data["task"][i]['task_id'];
+                    span = document.createElement("span");
+                    span.className = "glyphicon glyphicon-trash";
+                    button.appendChild(span);
+
+                    /* setting attributes of buttons */
+
+                    button.setAttributeNode(data_toggle);
+                    button.setAttributeNode(data_target);
+                    button.setAttributeNode(data_href);
+
+                    /* setting value according to the api */
+
+                    var textNode = document.createTextNode("  " + data["task"][i]['task_name']);
+                    anchor.appendChild(textNode);
+                    anchor.appendChild(button);
+                    div = document.createElement("div");
+                    var textNode_div = document.createTextNode("  " + data["task"][i]['task_description']);
+
+                    /* appending elements to the parent tags */
+
+                    div.appendChild(textNode_div);
+                    div.className = "desc";
+                    new_li.appendChild(anchor);
+                    new_li.appendChild(div);
+
+                    new_li.id = data["task"][i]['task_id']; // every task having task id
+
+                    list.appendChild(new_li);
+
+
+                }
+            }
+        });
+
+        /* deleting a task using api */
+
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+
+            $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+        });
+
+        $('#delete_task').click(function (event){
+             event.preventDefault();
+             $.ajax({
+                type: "DELETE",
+                async: false,
+                url: $(this).attr('href'),
+                success: function(data) {
+                    console.log(data);
+                    if (data["message"] === "Task successfully deleted") {
+
+                       location.reload();
+
+                    }
+                    else {
+                       alert("Some error occured!");
+                    }
+                },
+                complete: function () {
+                       $("#dismiss_delete_modal").click()
+                }
+             })
+             return false; //for good measure
+        });
+
+
+        /* adding a task using api */
+
+        $("#add_task").click(function(){
+
+                /* validation on form */
+            if($("#task_name").val() === "" || $("#task_desc").val() === ""){
+
+                 alert("Fields can\'t be empty.")
+
+            }
+            else{
+               $.ajax({
+                   type: "POST",
+                   async: false,
+                   data: {"task_name": $("#task_name").val(), "task_desc": $("#task_desc").val()},
+                   url: "http://localhost:8001/task",
+                   dataType: 'json',
+                   success: function (data) {
+                       //console.log(data);
+                       if (data["message"] === "Task successfully created") {
+
+                           location.reload();
+
+                       }
+                       else {
+                           alert("Some error occured!");
+                       }
+
+                   },
+                   complete: function () {
+                       $("#dismiss_modal").click()
+                   }
+               });
+            }
+        });
+
+
+
+    });
+
+</script>
+</html>

@@ -1,0 +1,108 @@
+body {
+    background-image: url("background.jpg");
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+
+.h1{
+   background: url(http://apod.nasa.gov/apod/image/0603/coma_misti.jpg) -80px -80px;
+  color: red;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  font-weight: bold;
+  font-size: 75px;
+  font-family: arial, helvetica;
+  width: 600px;
+  margin: 25px auto;
+  text-align: center;
+}
+
+.list-type1{
+width:1080px;
+margin:0 auto;
+}
+
+.list-type1 ol{
+    counter-reset: li;
+    list-style: none;
+    *list-style: decimal;
+    font-size: 18.5px;
+    font-family: 'Times New Roman', sans-serif;
+    padding: 0;
+    margin-bottom: 4em;
+}
+
+.list-type1 ol ol{
+    margin: 0 0 0 2em;
+}
+
+.list-type1 a{
+    position: relative;
+    display: block;
+    padding: 1.0em 3.0em 1.0em 3.5em;
+    *padding: 2.4em;
+    margin: .5em 0;
+    background: linear-gradient(to right, #67B26F 0%, #4ca2cd 100%);
+    color: #000;
+    text-decoration: none;
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    border-radius: 10em 0 0 10em;
+    transition: all .2s ease-in-out;
+}
+
+
+.list-type1 a:hover{
+    background: #d6d4d4;
+    text-decoration:none;
+    transform: scale(1.1);
+}
+
+.list-type1 a:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -1.3em;
+    //top: 50%;
+    margin-top: -1.3em;
+    background:#67B26F;
+    height: 4em;
+    width: 4em;
+    line-height: 2.3em;
+    border: .3em solid #fff;
+    text-align: center;
+    font-weight: bold;
+    -moz-border-radius: 2em;
+    -webkit-border-radius: 2em;
+    border-radius: 2em;
+    color:#FFF;
+    padding: 10px;
+}
+
+.btn-sm{
+    position: relative;
+    top : -2.5px;
+}
+
+.list-type1 a:hover ~ .desc{
+    visibility: visible;
+    opacity: 1;
+     position: relative;
+
+}
+
+.desc:hover{
+    position: relative;
+    visibility: visible;
+    opacity: 1;
+}
+
+.desc{
+    position: absolute;
+    padding: 50px;
+    background: white;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1000ms, visibility 50ms;
+
+}
