@@ -3,8 +3,6 @@ from managers import create_task, list_task, delete_task
 
 app = Flask(__name__)
 
-languages = [{'name': 'JavaScript'}, {'name': 'Python'}, {'name': 'Ruby'}]
-
 
 @app.route('/', methods=['GET'])
 def test():
