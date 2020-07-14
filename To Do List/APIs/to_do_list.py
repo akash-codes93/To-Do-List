@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def test():
-    return jsonify({'message': 'It works! {changed from clone1}'})
+    return jsonify({'message': 'It works! {changed from clone2}'})
 
 
 @app.route('/task', methods=['POST'])
